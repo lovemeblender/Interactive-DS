@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Animated linked list </title>
+
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body onLoad="initCanvas()">
+
+<script src="list.js"></script>
+
+<h1 align="center"><font face="cursive">Create your Linked List</font></h1>
+
+<canvas id="canvas" width="1200" height="300">Consider getting a modern browser maybe?</canvas>
+
+<div class="buttons">
+	<div class="insButton">
+		<input type="button" OnClick="insertAtFront()" id="insfb" class="action-button shadow animate blue" value="Insert at front"/>
+		<input type="button" OnClick="insertAtBack()" id="insbb" class="action-button shadow animate blue" value="Insert at back"/>
+	</div>
+
+	<div class="delButton">
+		<input type="button" OnClick="deleteFromFront()" id="delfb" class="action-button shadow animate red" value="Delete from front"/>	
+		<input type="button" OnClick="deleteFromBack()" id="delbb" class="action-button shadow animate red" value="Delete from back"/>
+	</div>
+</div>
+
+<input type="button" OnClick="clearAll()" id="clr" class="action-button shadow animate green" value="Clear"/>
+
+<div id="footer">&copy; 2014</div>
+
+</body>
+
+</html>
