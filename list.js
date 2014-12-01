@@ -8,12 +8,7 @@ function initCanvas() {
 	nodes = 0; // number of nodes active on the canvas
     lastX = 0; // position on the x axis
 
-	<!--Draw outer frame-->
-	context.strokeStyle = "#6E0000";
-	context.lineWidth = 5;
-	context.strokeRect(0, 0, 1150, 300);
-
-	<!--Draw head-->
+	<!--Draw head reference-->
 	context.strokeStyle = "black";
 	context.lineWidth = 1;
 	context.strokeRect(20, 10, 40, 20);
