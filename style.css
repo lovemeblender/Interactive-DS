@@ -7,15 +7,22 @@
     width: 100%;
 }
 
+html {
+	max-width: 100%;
+	overflow-x: hidden;
+	padding: 50px;
+}
+
 body
 {
-	background-image: url('img/drawing.png');
+	/*background-image: url('img/drawing.png') no-repeat fixed;
 	-webkit-background-size: cover;
-  	-moz-background-size: cover;
-  	-o-background-size: cover;
-  	background-size: cover;
-	background-repeat:no-repeat;
-	padding: 50px;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    overflow-x: hidden;
+	
+	*/
 }
 
 .action-button
@@ -62,7 +69,7 @@ body
 .action-button:active
 {
 	transform: translate(0px,5px);
-  -webkit-transform: translate(0px,5px);
+	-webkit-transform: translate(0px,5px);
 	border-bottom: 1px solid;
 }
 
@@ -93,5 +100,5 @@ body
 }
 
 :focus{
-    outline:0; /*removes the dotted border*/
+    outline:0; /*removes the dotted border from buttons*/
 }

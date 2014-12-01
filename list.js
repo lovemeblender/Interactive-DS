@@ -1,6 +1,29 @@
 var nodes = 0;
 var lastX = 0;
 
+function initCanvas() {
+	var canvas = document.getElementById("canvas");
+	var context = canvas.getContext("2d");
+
+	nodes = 0; // number of nodes active on the canvas
+    lastX = 0; // position on the x axis
+
+	<!--Draw outer frame-->
+	context.strokeStyle = "#6E0000";
+	context.lineWidth = 5;
+	context.strokeRect(0, 0, 1150, 300);
+
+	<!--Draw head-->
+	context.strokeStyle = "black";
+	context.lineWidth = 1;
+	context.strokeRect(20, 10, 40, 20);
+	context.fillText("head", 28, 23);
+
+	<!--Draw head vertical arrow-->
+	drawHeadVerticalLine(context);
+	drawArrowhead(context, 40, 60, true);
+};
+
 function drawNode(context, x, y, value) {
 
 	<!--Draw node-->
@@ -12,21 +35,7 @@ function drawNode(context, x, y, value) {
 	context.strokeStyle = "black";
 	context.lineWidth = 1;
 	context.strokeRect(x + 80, y + 10, 33, 20);
-	
-	// center value
-	if(value > 999) {
-		value = 999;
-	}
-	if(value.length == 1) {
-		context.fillText(value, x + 95, y + 23);
-	}
-	else if(value.length == 2) {
-		context.fillText(value, x + 93, y + 23);
-	}
-	else {
-		context.fillText(value, x + 91, y + 23);
-	}
-	// center value
+	context.fillText(value, x + 92, y + 23);
 
 	<!--Draw next node box-->
 	context.strokeStyle = "black";
@@ -59,19 +68,6 @@ function insertAtBack() {
     var canvas = document.getElementById("canvas"); // get canvas
 	var context = canvas.getContext("2d"); // get context
 
-	if(nodes == 7) { // draw the 7th node on the 2nd row
-		drawNode(context, lastX, 170, value);
-		context.moveTo(1150, 110);
- 		context.lineTo(1150, 170);
-		context.strokeStyle="#black";
-		//drawArrowhead(context, 1150, 170, true);
-	}
-	else if(nodes > 7) {
-		drawLine(context, lastX + 100, 220);
-		lastX -= 200;
-		drawNode(context, lastX, 170, value);
-	}
-
 	if(nodes == 1) { // draw the first node at (20, 60)
 		lastX = 20;
 		drawNode(context, lastX, 60, value);
@@ -80,8 +76,21 @@ function insertAtBack() {
 	}
 	else if(nodes > 1 && nodes < 7) {
 		lastX += 200;
-		drawLine(context, lastX, 110);
+		drawLine(context, lastX - 100, 110, lastX, 110); // draw a line of length 100
 		drawNode(context, lastX, 60, value);
+	}
+	else if(nodes == 7) { // draw the 7th node on the 2nd row
+		drawNode(context, lastX, 170, value);
+		context.moveTo(1150, 110);
+ 		context.lineTo(1150, 170);
+		context.strokeStyle="#black";
+		drawVerticalLine(context, 200 , 50);
+		drawArrowhead(context, 1118, 170, true);
+	}
+	else if(nodes > 7 && nodes < 13) {
+		lastX -= 200;
+		drawLine(context, lastX + 120, 220, lastX + 300, 220); // draw a line of length 180
+		drawNode(context, lastX, 170, value);
 	}
 
 	/*
@@ -91,14 +100,13 @@ function insertAtBack() {
 
 	// Create Node Object
 	//var node = new Node(value, );
-		
 };
 
 function insertAtFront() {
     var value = Math.floor((Math.random() * 100) + 1); // Random integer [1-100]
     var canvas = document.getElementById("canvas");
 	var context = canvas.getContext("2d");
-alert("Inserted " + value);
+	alert("Inserted " + value);
 	if(nodes == 1) {
 		lastX = 50;
 		drawNode(context, 50, 60, value);
@@ -138,68 +146,32 @@ function deleteFromBack() {
     nodes--;
 };
 
-function initCanvas() {
-	var canvas = document.getElementById("canvas");
-	var context = canvas.getContext("2d");
-
-	nodes = 0; // number of nodes active on the canvas
-    lastX = 0; // position on the x axis
-
-	<!--Draw outer frame-->
-	context.strokeStyle = "#6E0000";
-	context.lineWidth = 5;
-	context.strokeRect(0, 0, 1150, 300);
-
-	<!--Draw head-->
-	context.strokeStyle = "black";
-	context.lineWidth = 1;
-	context.strokeRect(20, 10, 40, 20);
-	context.fillText("head", 28, 23);
-
-	<!--Draw head vertical arrow-->
-	drawVerticalLine(context, 30, 60);
-	//drawArrowhead(context, 80, 60, true);
-};
-
-/*
-* TODO - Rewrite arrow functions
-*
-*/
-
-/*
-function deleteArrow(context) {
-	context.clearLine(250, 110);
-}
-*/
-
-function drawVerticalLine(context, x, y) {
+// from (x, y) to (z, w)
+function drawLine(context, x, y, z, w) {
 	context.beginPath();
-	context.moveTo(40, x);
- 	context.lineTo(40, y);
-	context.strokeStyle="#black";
-	context.stroke();
-}
-
-function drawLine(context, x, y) {
-	context.beginPath();
-	context.moveTo(x - 100, y);
- 	context.lineTo(x, y);
+	context.moveTo(x, y); // from
+ 	context.lineTo(z, w); // to
 	context.strokeStyle = "#black";
 	context.stroke();
-    //drawArrowhead(context, x, y);
+    drawArrowhead(context, x + 100, y);
 };
 
-/*
 function drawArrowhead(ctx, x, y, vertical) {
     ctx.save();
-    ctx.beginPath();
-    ctx.translate(x, y);
+    
     if(vertical) {
+    	ctx.translate(x, y);
     	ctx.rotate(90 * Math.PI / 2);
     }
+    else if (y == 220){
+    	ctx.translate(x - 100, y);
+    	ctx.rotate(-Math.PI / 2);
+    }
     else {
+    	ctx.translate(x, y);
     	ctx.rotate(Math.PI / 2);
     }
+    ctx.beginPath();
     ctx.moveTo(0, 0);
     ctx.lineTo(3, 16);  <!--Change arrow head size-->
     ctx.lineTo(-3, 16); <!--Change arrow head size-->
@@ -207,4 +179,25 @@ function drawArrowhead(ctx, x, y, vertical) {
     ctx.restore();
     ctx.fill();
 };
+
+function drawHeadVerticalLine(context) {
+	context.beginPath();
+	context.moveTo(40, 30);
+ 	context.lineTo(40, 60);
+	context.strokeStyle="#black";
+	context.stroke();
+}
+
+function drawVerticalLine(context, x, y) {
+	context.beginPath();
+	context.moveTo(1118, 110);
+ 	context.lineTo(1118, 170);
+	context.strokeStyle="#black";
+	context.stroke();
+}
+
+/*
+function deleteArrow(context) {
+	context.clearLine(250, 110);
+}
 */
