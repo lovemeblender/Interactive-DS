@@ -25,6 +25,8 @@ canvas {
 	font-family: 'Pacifico', cursive;
 	font-size: 25px;
 	color: #FFF;
+	cursor: pointer; 
+	cursor: hand;
 }
 
 .blue
