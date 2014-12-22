@@ -65,6 +65,7 @@ function deleteNode(context, x, y) {
 	nodes--;
 
 	<!-- DEBUGGING -->
+	/*
 		context.clearRect(98, 0, 200, 30);
 		context.fillText(nodes, 100, 15);
 
@@ -75,6 +76,7 @@ function deleteNode(context, x, y) {
 			context.fillText(elements[i]+",", 300 + a, 15);
 			a += 15;
 		}
+	*/
 	<!-- DEBUGGING -->
 	
 
@@ -156,6 +158,7 @@ function insertAtBack() {
 		elements[nodes] = value;
 
 		<!-- DEBUGGING -->
+		/*
 		context.clearRect(98, 0, 200, 30);
 		context.fillText(nodes, 100, 15);
 
@@ -166,6 +169,7 @@ function insertAtBack() {
 			context.fillText(elements[i]+",", 300 + x, 15);
 			x += 15;
 		}
+		*/
 		<!-- DEBUGGING -->
 
 		if(nodes == 1) { // draw the first node at (20, 60)
@@ -206,7 +210,6 @@ function insertAtFront() {
 		return;
 	}
 
-    //var value = document.getElementById('insfid').value;
     var value = Math.floor((Math.random() * 100) + 1); // Value of the node, random integer [1-100]
     var canvas = document.getElementById("canvas"); // get canvas
 	var context = canvas.getContext("2d"); // get context
