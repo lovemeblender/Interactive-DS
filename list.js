@@ -1,5 +1,7 @@
-var nodes = 0;
-var lastX = 0;
+var nodes = 0; // number of nodes
+var lastX = 0; // current x co-ordinates
+var lastY = 60; // current y co-ordinates
+var elements = []; // the list as an array
 
 function initCanvas() {
 	var canvas = document.getElementById("canvas");
@@ -38,24 +40,170 @@ function drawNode(context, x, y, value) {
 	context.strokeRect(x + 80, y + 40, 33, 20);
 };
 
+function drawNodeSecondRow(context, x, y, value) {
+
+	<!--Draw node-->
+	context.strokeStyle = "black";
+	context.lineWidth = 1;
+	context.strokeRect(x, y, 120, 75);
+
+	<!--Draw value box-->
+	context.strokeStyle = "black";
+	context.lineWidth = 1;
+	context.strokeRect(x + 5, y + 10, 33, 20);
+	context.fillText(value, x + 16, y + 23);
+
+	<!--Draw next node box-->
+	context.strokeStyle = "black";
+	context.lineWidth = 1;
+	context.strokeRect(x + 5, y + 40, 33, 20);
+};
+
 function deleteNode(context, x, y) {
 	
-	<!--Delete node-->
-	context.clearRect(x, y, 140, 80);
+	elements[nodes] = undefined;
+	nodes--;
 
-	<!--Delete value box-->
-	context.clearRect(x + 80, y + 10, 40, 20);
+	<!-- DEBUGGING -->
+		context.clearRect(98, 0, 200, 30);
+		context.fillText(nodes, 100, 15);
 
-	<!--Delete next node box-->
-	context.clearRect(x + 80, y + 40, 40, 20);
+		context.clearRect(300, 0, 800, 20);
+		var a = 0;
+		for(i = 0; i < 13; i++) {
+			if(elements[i] !== undefined)
+			context.fillText(elements[i]+",", 300 + a, 15);
+			a += 15;
+		}
+	<!-- DEBUGGING -->
+	
+
+	if (nodes == 0) {
+		<!--Delete node-->
+		context.clearRect(x - 1, y - 1, 200, 81);
+	}
+	else if(nodes == 1) {
+		<!--Delete node-->
+		context.clearRect(x - 1, y - 1, 200, 81);
+	
+		<!--Delete previous node-->
+		context.clearRect(x - 201, y - 1, 200, 81);
+
+		<!--Re-draw previous node-->
+		var value = elements[nodes];
+		drawNode(context, lastX - 200, 60, value);
+
+		context.fillText("value:", 65, 82); // add value label
+		context.fillText("next:", 65, 113); // add next label
+
+		lastX -= 200;
+	}
+	else if(nodes > 1 && nodes < 6) {
+		<!--Delete node-->
+		context.clearRect(x - 1, y - 1, 200, 81);
+	
+		<!--Delete previous node-->
+		context.clearRect(x - 201, y - 1, 200, 81);
+
+		<!--Re-draw previous node-->
+		var value = elements[nodes];
+		drawNode(context, lastX - 200, 60, value);
+
+		lastX -= 200;
+	}
+	else if(nodes == 6) {
+		<!--Delete node-->
+		context.clearRect(x - 1, y - 1, 200, 81);
+	
+		<!--Delete previous node on upper node-->
+		context.clearRect(x - 1, y - 111, 200, 110);
+
+		<!--Re-draw previous node-->
+		var value = elements[nodes];
+		drawNode(context, lastX, 60, value);
+
+		lastY = 60;
+	}
+	else if(nodes > 6) {
+		<!--Delete node-->
+		context.clearRect(x - 1, y - 1, 200, 81);
+	
+		<!--Delete previous node-->
+		context.clearRect(x + 199, y - 1, 122, 81);
+
+		<!--Re-draw previous node-->
+		var value = elements[nodes];
+		drawNodeSecondRow(context, lastX + 200, 170, value);
+
+		lastX += 200;
+	}
 };
 
 function insertAtBack() {
 
 	nodes++;
+	
+	if(nodes > 12) {
+		alert("There is also a delete operation!");
+		nodes--;
+	}
+	else {
+
+    	var value = Math.floor((Math.random() * 100) + 1); // Value of the node, random integer [1-100]
+    	var canvas = document.getElementById("canvas"); // get canvas
+		var context = canvas.getContext("2d"); // get context
+
+		elements[nodes] = value;
+
+		<!-- DEBUGGING -->
+		context.clearRect(98, 0, 200, 30);
+		context.fillText(nodes, 100, 15);
+
+		context.clearRect(300, 0, 800, 20);
+		var x = 0;
+		for(i = 0; i < 13; i++) {
+			if(elements[i] !== undefined)
+			context.fillText(elements[i]+",", 300 + x, 15);
+			x += 15;
+		}
+		<!-- DEBUGGING -->
+
+		if(nodes == 1) { // draw the first node at (20, 60)
+			lastX = 20;
+			drawNode(context, lastX, 60, value);
+			context.fillText("value:", 65, 82); // add value label
+			context.fillText("next:", 65, 113); // add next label
+		}
+		else if(nodes > 1 && nodes < 7) {
+			lastX += 200;
+			drawLine(context, lastX - 100, 110, lastX, 110); // draw a line of length 100
+			drawNode(context, lastX, 60, value);
+		}
+		else if(nodes == 7) { // draw the 7th node on the 2nd row
+			drawNodeSecondRow(context, lastX, 170, value);
+			context.moveTo(1150, 110);
+ 			context.lineTo(1150, 170);
+			context.strokeStyle="#black";
+			drawVerticalLine(context, 200 , 50);
+			drawArrowhead(context, 1118, 170, true);
+			lastY = 170;
+		}
+		else if(nodes > 7 && nodes < 13) {
+			lastX -= 200;
+			drawLine(context, lastX + 120, 220, lastX + 220, 220); // draw a line of length 180
+			drawNodeSecondRow(context, lastX, 170, value);
+		}
+
+	}
+};
+
+function insertAtFront() {
+
+	nodes++;
 
 	if(nodes > 12) {
 		alert("There is also a delete operation!");
+		return;
 	}
 
     //var value = document.getElementById('insfid').value;
@@ -71,7 +219,7 @@ function insertAtBack() {
 	}
 	else if(nodes > 1 && nodes < 7) {
 		lastX += 200;
-		drawLine(context, lastX - 100, 110, lastX, 110); // draw a line of length 100
+		drawLine(context, lastX - 100, 110, lastX, 110); // draw an arrow of length 100
 		drawNode(context, lastX, 60, value);
 	}
 	else if(nodes == 7) { // draw the 7th node on the 2nd row
@@ -84,61 +232,36 @@ function insertAtBack() {
 	}
 	else if(nodes > 7 && nodes < 13) {
 		lastX -= 200;
-		drawLine(context, lastX + 120, 220, lastX + 300, 220); // draw a line of length 180
-		drawNode(context, lastX, 170, value);
+		drawLine(context, lastX + 120, 220, lastX + 300, 220); // draw an arrow of length 180
+		drawNodeSecondRow(context, lastX, 170, value);
 	}
-
-	/*
-	*
-	*   TODO - OOP APPROACH
-	*/
-
-	// Create Node Object
-	//var node = new Node(value, );
-};
-
-function insertAtFront() {
-    var value = Math.floor((Math.random() * 100) + 1); // Random integer [1-100]
-    var canvas = document.getElementById("canvas");
-	var context = canvas.getContext("2d");
-	alert("Inserted " + value);
-	if(nodes == 1) {
-		lastX = 50;
-		drawNode(context, 50, 60, value);
-		context.fillText("value:", 68, 82);
-		context.fillText("next:", 68, 113);
-	}
-	else if(nodes > 1 && nodes < 7) {
-		lastX += 200;
-		drawLine(context, lastX, 110);
-		drawNode(context, lastX, 60, value);
-	}
-
 };
 
 function clearAll() {
-    var value = Math.floor((Math.random() * 100) + 1);
+    
     var canvas = document.getElementById("canvas");
 	var context = canvas.getContext("2d");
 	context.save();
     context.clearRect(0, 0, canvas.width, canvas.height);
-    
+    elements = [];
+
 	initCanvas();    
 };
 
 function deleteFromFront() {
-    var value = document.getElementById('delfid').value;
+    
     var canvas = document.getElementById("canvas");
 	var context = canvas.getContext("2d");
 
-    deleteNode(context, 50, 60);
-    //deleteArrow(context);
-    nodes--;
+    if(nodes > 0) deleteNode(context, 50, 60);
 };
 
 function deleteFromBack() {
-    var value = document.getElementById('delbid').value;
-    nodes--;
+    
+    var canvas = document.getElementById("canvas");
+	var context = canvas.getContext("2d");
+
+    if(nodes > 0) deleteNode(context, lastX, lastY);
 };
 
 // from (x, y) to (z, w)
@@ -190,9 +313,3 @@ function drawVerticalLine(context, x, y) {
 	context.strokeStyle="#black";
 	context.stroke();
 }
-
-/*
-function deleteArrow(context) {
-	context.clearLine(250, 110);
-}
-*/
