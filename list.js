@@ -145,6 +145,7 @@ function insertAtBack() {
 	
 	if(nodes > 12) {
 		alert("There is also a delete operation!");
+		nodes--;
 	}
 	else {
 
