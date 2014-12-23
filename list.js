@@ -61,7 +61,6 @@ function drawNodeSecondRow(context, x, y, value) {
 
 function deleteNode(context, x, y) {
 	
-	elements[nodes] = undefined;
 	nodes--;
 
 	<!-- DEBUGGING -->
@@ -71,15 +70,14 @@ function deleteNode(context, x, y) {
 
 		context.clearRect(300, 0, 800, 20);
 		var a = 0;
-		for(i = 0; i < 13; i++) {
+		for(i = 0; i < nodes; i++) {
 			if(elements[i] !== undefined)
-			context.fillText(elements[i]+",", 300 + a, 15);
-			a += 15;
+			context.fillText(i+": "+elements[i]+",", 300 + a, 15);
+			a += 45;
 		}
 	*/
 	<!-- DEBUGGING -->
 	
-
 	if (nodes == 0) {
 		<!--Delete node-->
 		context.clearRect(x - 1, y - 1, 200, 81);
@@ -92,7 +90,7 @@ function deleteNode(context, x, y) {
 		context.clearRect(x - 201, y - 1, 200, 81);
 
 		<!--Re-draw previous node-->
-		var value = elements[nodes];
+		var value = elements[nodes - 1];
 		drawNode(context, lastX - 200, 60, value);
 
 		context.fillText("value:", 65, 82); // add value label
@@ -108,7 +106,7 @@ function deleteNode(context, x, y) {
 		context.clearRect(x - 201, y - 1, 200, 81);
 
 		<!--Re-draw previous node-->
-		var value = elements[nodes];
+		var value = elements[nodes - 1];
 		drawNode(context, lastX - 200, 60, value);
 
 		lastX -= 200;
@@ -121,7 +119,7 @@ function deleteNode(context, x, y) {
 		context.clearRect(x - 1, y - 111, 200, 110);
 
 		<!--Re-draw previous node-->
-		var value = elements[nodes];
+		var value = elements[nodes - 1];
 		drawNode(context, lastX, 60, value);
 
 		lastY = 60;
@@ -134,10 +132,13 @@ function deleteNode(context, x, y) {
 		context.clearRect(x + 199, y - 1, 122, 81);
 
 		<!--Re-draw previous node-->
-		var value = elements[nodes];
+		var value = elements[nodes - 1];
 		drawNodeSecondRow(context, lastX + 200, 170, value);
 
 		lastX += 200;
+	}
+	if(nodes == 0) {
+		elements = [];
 	}
 };
 
@@ -151,11 +152,11 @@ function insertAtBack() {
 	}
 	else {
 
-    	var value = Math.floor((Math.random() * 100) + 1); // Value of the node, random integer [1-100]
+    	var value = Math.floor((Math.random() * 99) + 1); // Value of the node, random integer [1-99]
     	var canvas = document.getElementById("canvas"); // get canvas
 		var context = canvas.getContext("2d"); // get context
 
-		elements[nodes] = value;
+		elements[nodes - 1] = value;
 
 		<!-- DEBUGGING -->
 		/*
@@ -164,10 +165,11 @@ function insertAtBack() {
 
 		context.clearRect(300, 0, 800, 20);
 		var x = 0;
-		for(i = 0; i < 13; i++) {
-			if(elements[i] !== undefined)
-			context.fillText(elements[i]+",", 300 + x, 15);
-			x += 15;
+		for(i = 0; i < 12; i++) {
+			if(elements[i] !== undefined) {
+				context.fillText(i+": "+elements[i]+", ", 300 + x, 15);
+				x += 45;
+			}
 		}
 		*/
 		<!-- DEBUGGING -->
@@ -204,39 +206,114 @@ function insertAtBack() {
 function insertAtFront() {
 
 	nodes++;
-
+	
 	if(nodes > 12) {
 		alert("There is also a delete operation!");
-		return;
+		nodes--;
 	}
+	else {
 
-    var value = Math.floor((Math.random() * 100) + 1); // Value of the node, random integer [1-100]
-    var canvas = document.getElementById("canvas"); // get canvas
-	var context = canvas.getContext("2d"); // get context
+    	var value = Math.floor((Math.random() * 99) + 1); // Value of the node, random integer [1-99]
+    	var canvas = document.getElementById("canvas"); // get canvas
+		var context = canvas.getContext("2d"); // get context
+		
+		elements.unshift(value);
 
-	if(nodes == 1) { // draw the first node at (20, 60)
-		lastX = 20;
-		drawNode(context, lastX, 60, value);
-		context.fillText("value:", 65, 82); // add value label
-		context.fillText("next:", 65, 113); // add next label
-	}
-	else if(nodes > 1 && nodes < 7) {
-		lastX += 200;
-		drawLine(context, lastX - 100, 110, lastX, 110); // draw an arrow of length 100
-		drawNode(context, lastX, 60, value);
-	}
-	else if(nodes == 7) { // draw the 7th node on the 2nd row
-		drawNode(context, lastX, 170, value);
-		context.moveTo(1150, 110);
- 		context.lineTo(1150, 170);
-		context.strokeStyle="#black";
-		drawVerticalLine(context, 200 , 50);
-		drawArrowhead(context, 1118, 170, true);
-	}
-	else if(nodes > 7 && nodes < 13) {
-		lastX -= 200;
-		drawLine(context, lastX + 120, 220, lastX + 300, 220); // draw an arrow of length 180
-		drawNodeSecondRow(context, lastX, 170, value);
+		<!-- DEBUGGING -->
+		/*
+		context.clearRect(98, 0, 200, 30);
+		context.fillText(nodes, 100, 15);
+
+		context.clearRect(300, 0, 800, 20);
+		var x = 0;
+		for(i = 0; i < 13; i++) {
+			if(elements[i] !== undefined)
+			context.fillText(i+": "+elements[i]+",    ", 300 + x, 15);
+			x += 25;
+		}
+		*/
+		<!-- DEBUGGING -->
+
+		if(nodes == 1) { // draw the first node at (20, 60)
+			lastX = 20;
+			drawNode(context, lastX, 60, value);
+			context.fillText("value:", 65, 82); // add value label
+			context.fillText("next:", 65, 113); // add next label
+		}
+		else if(nodes > 1 && nodes < 7) {
+			lastX += 200;
+			
+			context.clearRect(19, 59, canvas.width, canvas.height); // clear canvas
+
+			var tempX = lastX;
+			for(i = nodes; i >= 0; i--) {
+				if(elements[i] !== undefined) {
+					if(i!=0) drawLine(context, tempX - 100, 110, tempX, 110); // draw an arrow, don't put it in front of the first node
+					drawNode(context, tempX, 60, elements[i]);
+					tempX -= 200;
+				}
+			}
+			context.fillText("value:", 65, 82); // add value label
+			context.fillText("next:", 65, 113); // add next label
+		}
+		else if(nodes == 7) { // draw the 7th node on the 2nd row
+
+			context.clearRect(19, 59, canvas.width, canvas.height); // clear canvas
+
+			var tempX = lastX;
+			for(i = nodes - 2; i >= 0; i--) {
+				if(elements[i] !== undefined) {
+					if(i!=0) drawLine(context, tempX - 100, 110, tempX, 110); // draw an arrow, don't put it in front of the first node
+					drawNode(context, tempX, 60, elements[i]);
+					tempX -= 200;
+				}
+			}
+			context.fillText("value:", 65, 82); // add value label
+			context.fillText("next:", 65, 113); // add next label
+
+			drawNodeSecondRow(context, lastX, 170, elements[nodes - 1]);
+			context.moveTo(1150, 110);
+ 			context.lineTo(1150, 170);
+			context.strokeStyle="#black";
+			drawVerticalLine(context, 200 , 50);
+			drawArrowhead(context, 1118, 170, true);
+			lastY = 170;
+		}
+		else if(nodes > 7 && nodes < 13) {
+			lastX -= 200;
+
+			context.clearRect(19, 59, canvas.width, canvas.height); // clear canvas
+
+			// second row
+			var srow = nodes - 7; // nodes [8, 12], srow [1, 5]
+			tempX = lastX;
+			for(i = srow; i > 0; i--) {
+				if(elements[i] !== undefined) {
+					drawLine(context, tempX + 120, 220, tempX + 220, 220); // draw a line of length 180
+					drawNodeSecondRow(context, tempX, 170, elements[ 6 + i ]);
+				}
+				tempX += 200;
+			}
+			// draw 7th node
+			drawNodeSecondRow(context, tempX, 170, elements[ 6 ]);
+			context.moveTo(1150, 110);
+ 			context.lineTo(1150, 170);
+			context.strokeStyle="#black";
+			drawVerticalLine(context, 200 , 50);
+			drawArrowhead(context, 1118, 170, true);
+
+			// draw upper nodes
+			for(i = 5; i >= 0; i--) {
+				if(elements[i] !== undefined) {
+					if(i!=0)drawLine(context, tempX - 100, 110, tempX, 110); // draw an arrow, don't put it in front of the first node
+					drawNode(context, tempX, 60, elements[i]);
+					tempX -= 200;
+				}
+			}
+
+			context.fillText("value:", 65, 82); // add value label
+			context.fillText("next:", 65, 113); // add next label
+		}
 	}
 };
 
