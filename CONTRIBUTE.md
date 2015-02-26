@@ -3,7 +3,7 @@ This is the contribute.md of Interactive-DS. Great to have you here.
 Please check the current issues and feel free to fork and start working on any of these.
 
 ## Team members
-Michael Despotopoulos
+It's just me for now.
 
 ## Adding new features
 Feel free to open a new issue (enhancement). I am sure we can use a lot of your great ideas! 
