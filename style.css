@@ -1,20 +1,12 @@
 body
 {
-	/*
-	background-image: url('img/drawing.png') no-repeat fixed;
-	-webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-    overflow-x: hidden;
-	*/
 	margin: 0 0 100px;
 }
 canvas {
 	border: 3px solid #993300;
 	border-radius: 15px;
-    margin: 0 auto;
-    display: block;
+	margin: 0 auto;
+    	display: block;
 }
 
 .action-button
